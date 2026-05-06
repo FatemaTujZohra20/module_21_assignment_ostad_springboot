@@ -2,6 +2,7 @@ package com.example.ecommerce.backend.product.service.impl;
 
 import com.example.ecommerce.backend.common.exception.ResourceConflictException;
 import com.example.ecommerce.backend.product.dto.request.ProductCreateRequest;
+import com.example.ecommerce.backend.product.dto.request.ProductSearchRequest;
 import com.example.ecommerce.backend.product.dto.request.ProductUpdateRequest;
 import com.example.ecommerce.backend.product.dto.response.ProductResponse;
 import com.example.ecommerce.backend.product.entity.Category;
@@ -13,6 +14,7 @@ import com.example.ecommerce.backend.product.service.ProductService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +44,21 @@ public class ProductServiceImpl implements ProductService {
         product.setCategory(getCategoryById(request.categoryId()));
         return productMapper.toResponse(productRepository.save(product));
     }
+    
+    // for the assignment
+    @Override
+    public Page<ProductResponse> search(ProductSearchRequest request) {
+        Pageable pageable = PageRequest.of(request.page(), request.size());
+        
+        return productRepository.searchProducts(
+                request.name(),
+                request.sku(),
+                request.categoryId(),
+                request.minPrice(),
+                request.maxPrice(),
+                pageable
+        ).map(productMapper::toResponse);
+    }
 
     @Override
     public ProductResponse getById(Long id) {
@@ -65,13 +82,15 @@ public class ProductServiceImpl implements ProductService {
         product.setCategory(getCategoryById(request.categoryId()));
         return productMapper.toResponse(productRepository.save(product));
     }
-
+    
     @Override
     public void delete(Long id) {
-        if (!productRepository.existsById(id)) {
-            throw new EntityNotFoundException("Product not found: " + id);
-        }
-        productRepository.deleteById(id);
+
+        // for the assignment (soft delete)
+        Product product = getProductById(id);
+        product.setIsActive(false);
+        productRepository.save(product);
+        
     }
 
     private Product getProductById(Long id) {
