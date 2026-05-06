@@ -209,7 +209,10 @@ public class ProductController {
         // Search must use the optional name, sku, categoryId, minPrice, and maxPrice filters.
         // Only products where isActive = true should be included in the result.
         // Use request.page() and request.size() to build the Pageable object.
-        throw new UnsupportedOperationException("Product search assignment is not implemented yet.");
+        
+        // for the assignment
+        var productPage = productService.search(request);
+        return ResponseEntity.ok(ApiResponse.success(PaginatedResponse.of(productPage)));
     }
 
     /**
@@ -302,6 +305,9 @@ public class ProductController {
         // TODO: Replace the current hard delete behavior with soft delete.
         // Soft delete means the product row must remain in the database.
         // Instead of calling deleteById, load the product, set isActive = false, and save it.
-        throw new UnsupportedOperationException("Product soft delete assignment is not implemented yet.");
+        
+        // for the soft delete
+        productService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
