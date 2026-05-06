@@ -197,9 +197,11 @@ public class CategoryController {
         // Search must use the optional name and code filters from the request.
         // Only categories where isActive = true should be included in the result.
         // Use request.page() and request.size() to build the Pageable object.
-
-        // Remove this line with your service method call
-        throw new UnsupportedOperationException("Category search assignment is not implemented yet.");
+        
+        // for the assignment
+        Pageable pageable = PageRequest.of(request.page(), request.size());
+        var categoryPage = categoryService.search(request);
+        return ResponseEntity.ok(ApiResponse.success(PaginatedResponse.of(categoryPage)));
     }
 
     /**
@@ -325,7 +327,8 @@ public class CategoryController {
         // Soft delete means the category row must remain in the database.
         // Instead of calling deleteById, load the category, set isActive = false, and save it.
 
-        // Remove this line with your service method call
-        throw new UnsupportedOperationException("Category soft delete assignment is not implemented yet.");
+        categoryService.delete(id);
+        
+        return ResponseEntity.noContent().build();
     }
 }
