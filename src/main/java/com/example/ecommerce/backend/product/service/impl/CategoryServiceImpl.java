@@ -2,6 +2,7 @@ package com.example.ecommerce.backend.product.service.impl;
 
 import com.example.ecommerce.backend.common.exception.ResourceConflictException;
 import com.example.ecommerce.backend.product.dto.request.CategoryCreateRequest;
+import com.example.ecommerce.backend.product.dto.request.CategorySearchRequest;
 import com.example.ecommerce.backend.product.dto.request.CategoryUpdateRequest;
 import com.example.ecommerce.backend.product.entity.Category;
 import com.example.ecommerce.backend.product.mapper.CategoryMapper;
@@ -10,6 +11,7 @@ import com.example.ecommerce.backend.product.service.CategoryService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +37,18 @@ public class CategoryServiceImpl implements CategoryService {
 
         Category category = categoryMapper.toEntity(request);
         return categoryRepository.save(category);
+    }
+    
+    
+    // for the assignment
+    @Override
+    public Page<Category> search(CategorySearchRequest request) {
+        Pageable pageable = PageRequest.of(request.page(), request.size());
+        return categoryRepository.searchCategories(
+                request.name(),
+                request.code(),
+                pageable
+        );
     }
 
     @Override
@@ -65,9 +79,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void delete(Long id) {
-        if (!categoryRepository.existsById(id)) {
-            throw new EntityNotFoundException("Category not found: " + id);
-        }
-        categoryRepository.deleteById(id);
+        
+        // for the assignment (soft delete)
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Category not found: " + id));
+        
+        category.setIsActive(false);
+        categoryRepository.save(category);
+        
     }
 }
