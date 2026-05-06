@@ -199,7 +199,6 @@ public class CategoryController {
         // Use request.page() and request.size() to build the Pageable object.
         
         // for the assignment
-        Pageable pageable = PageRequest.of(request.page(), request.size());
         var categoryPage = categoryService.search(request);
         return ResponseEntity.ok(ApiResponse.success(PaginatedResponse.of(categoryPage)));
     }
