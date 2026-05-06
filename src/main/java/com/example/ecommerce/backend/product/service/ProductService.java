@@ -1,6 +1,7 @@
 package com.example.ecommerce.backend.product.service;
 
 import com.example.ecommerce.backend.product.dto.request.ProductCreateRequest;
+import com.example.ecommerce.backend.product.dto.request.ProductSearchRequest;
 import com.example.ecommerce.backend.product.dto.request.ProductUpdateRequest;
 import com.example.ecommerce.backend.product.dto.response.ProductResponse;
 import org.springframework.data.domain.Page;
@@ -24,6 +25,11 @@ public interface ProductService {
      * @throws jakarta.persistence.EntityNotFoundException if category not found
      */
     ProductResponse create(ProductCreateRequest request);
+    
+    
+    // for the assignment
+    Page<ProductResponse> search(ProductSearchRequest request);
+    
 
     /**
      * Retrieves a product by its ID.
