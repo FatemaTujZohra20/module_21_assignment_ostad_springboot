@@ -1,6 +1,7 @@
 package com.example.ecommerce.backend.product.service;
 
 import com.example.ecommerce.backend.product.dto.request.CategoryCreateRequest;
+import com.example.ecommerce.backend.product.dto.request.CategorySearchRequest;
 import com.example.ecommerce.backend.product.dto.request.CategoryUpdateRequest;
 import com.example.ecommerce.backend.product.entity.Category;
 import org.springframework.data.domain.Page;
@@ -24,6 +25,10 @@ public interface CategoryService {
      * @throws com.example.ecommerce.backend.common.exception.ResourceConflictException if category code exists
      */
     Category create(CategoryCreateRequest request);
+    
+    // for the assignment
+    Page<Category> search(CategorySearchRequest request);
+    
 
     /**
      * Retrieves a category by its ID.
